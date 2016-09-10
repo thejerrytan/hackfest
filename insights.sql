@@ -28,3 +28,29 @@ group by o.delivery_start and o.delivery_end;
 -- Age profile of customers
 
 SELECT age, COUNT(*) FROM user GROUP BY age ORDER BY age DESC;
+
+-- Frequency of orders
+SELECT  COUNT(*) AS freq_buyer, user_id FROM hackfest.user INNER JOIN hackfest.order ON user.id = order.user_id GROUP BY user_id ORDER BY freq_buyer DESC;
+
+-- Orders per user
+SELECT order_day, order_time FROM hackfest.user INNER JOIN `order` ON user.id = user_id WHERE user.id =678455615106 ORDER BY order_day ASC;
+
+-- Average spending per user
+SELECT AVG(sales_amount) AS order_ave, user_id FROM hackfest.user 
+INNER JOIN `order` ON user.id = user_id
+INNER JOIN `order_item` ON `order_item`.order_id = `order`.id
+GROUP BY (user_id) ORDER BY order_ave DESC;
+
+-- Average num of items per order per user
+SELECT AVG(total_qty), user_id FROM (
+	SELECT SUM(qty) AS total_qty, order_id, user_id FROM hackfest.user 
+	INNER JOIN `order` ON user.id = user_id
+	INNER JOIN `order_item` ON `order_item`.order_id = `order`.id
+	GROUP BY (order_id) ORDER BY user_id DESC) AS t
+GROUP BY user_id;
+
+-- Average spending per order
+SELECT AVG(sales_amount) AS order_ave, order_id FROM hackfest.user 
+INNER JOIN `order` ON user.id = user_id
+INNER JOIN `order_item` ON `order_item`.order_id = `order`.id
+GROUP BY (order_id) ORDER BY order_ave DESC;
