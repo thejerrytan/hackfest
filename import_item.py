@@ -25,13 +25,14 @@ for line in f:
 	# except mysql.connector.errors.IntegrityError as e:
 	# 	print e
 	# 	print cursor._executed
-	try:
-		cursor.execute("INSERT INTO hackfest.order_item (order_id, item_id, qty, sales_amount) VALUES (%s, %s, %s, %s);", order)
-		count += 1
-		print("count %d" % count)
-	except mysql.connector.errors.IntegrityError as e:
-		print e
-		print cursor._executed
-	cnx.commit()
+	if len(order) == 4:
+		try:
+			cursor.execute("INSERT INTO hackfest.order_item (order_id, item_id, qty, sales_amount) VALUES (%s, %s, %s, %s);", order)
+			count += 1
+			print("count %d" % count)
+			cnx.commit()
+		except mysql.connector.errors.IntegrityError as e:
+			print e
+			print cursor._executed
 f.close()
 cnx.close()
