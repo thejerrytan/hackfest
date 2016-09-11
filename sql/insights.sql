@@ -42,12 +42,12 @@ INNER JOIN `order_item` ON `order_item`.order_id = `order`.id
 GROUP BY (user_id) ORDER BY order_ave DESC;
 
 -- Average num of items per order per user
-SELECT AVG(total_qty), user_id FROM (
+SELECT AVG(total_qty) as ave_qty, user_id FROM (
 	SELECT SUM(qty) AS total_qty, order_id, user_id FROM hackfest.user 
 	INNER JOIN `order` ON user.id = user_id
 	INNER JOIN `order_item` ON `order_item`.order_id = `order`.id
 	GROUP BY (order_id) ORDER BY user_id DESC) AS t
-GROUP BY user_id;
+GROUP BY user_id ORDER BY ave_qty DESC;
 
 -- Average spending per order
 SELECT AVG(sales_amount) AS order_ave, order_id FROM hackfest.user 
